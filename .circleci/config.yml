@@ -1,52 +1,99 @@
 version: 2
+
 references:
 
 
 
   ## Cache
 
+
+
   cache_key: &cache_key
+
     key: cache-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}
+
   restore_cache: &restore_cache
+
     restore_cache:
+
       <<: *cache_key
+
   save_cache: &save_cache
+
     save_cache:
+
       <<: *cache_key
+
       paths:
+
         - ~/.gradle
+
         - ~/.m2
+
+
+
   ## Workspace
 
+
+
   workspace: &workspace
+
                ~/workspace
+
   attach_debug_workspace: &attach_debug_workspace
+
     attach_workspace:
+
       at: *workspace
+
   attach_release_workspace: &attach_release_workspace
+
     attach_workspace:
+
       at: *workspace
+
   persist_debug_workspace: &persist_debug_workspace
+
     persist_to_workspace:
+
       root: *workspace
+
       paths:
+
         - app/build/outputs/androidTest-results
+
         - app/build/outputs/apk
+
         - app/build/outputs/code-coverage
+
         - app/build/test-results
+
   persist_release_workspace: &persist_release_workspace
+
     persist_to_workspace:
+
       root: *workspace
+
       paths:
+
         - app/build
+
   attach_firebase_workspace: &attach_firebase_workspace
+
     attach_workspace:
+
       at: *workspace
+
   persist_firebase_workspace: &persist_firebase_workspace
+
     persist_to_workspace:
+
       root: *workspace
+
       paths:
+
         - firebase
+
 
 
   ## Docker image configuration
@@ -54,7 +101,9 @@ references:
 
 
   android_config: &android_config
+
     working_directory: *workspace
+
     docker:
 
       - image: circleci/android:api-29-alpha
@@ -287,13 +336,13 @@ jobs:
 
           name: Set Google Cloud target project
 
-          command: gcloud config set project idea-dc870
+          command: gcloud config set project YOUR-FIREBASE-PROJECT
 
       - run:
 
           name: Authenticate with Google Cloud
 
-          command: gcloud auth activate-service-account firebase-adminsdk-9tckf@idea-dc870.iam.gserviceaccount.com --key-file ${HOME}/client-secret.json
+          command: gcloud auth activate-service-account YOUR-FIREBASE-SERVICE-ACCOUNT --key-file ${HOME}/client-secret.json
 
       - run:
 
@@ -317,7 +366,7 @@ jobs:
 
           name: Download instrumented test results from Firebase Test Lab
 
-          command: gsutil -m cp -r -U gs://test-lab-bczt6ipju56c0-ihmucqiv2td94/${CIRCLE_SHA1} /root/workspace/firebase/
+          command: gsutil -m cp -r -U gs://YOUR-GCLOUD-ID/${CIRCLE_SHA1} /root/workspace/firebase/
 
       - *persist_firebase_workspace
 
