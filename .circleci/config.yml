@@ -1,99 +1,52 @@
 version: 2
-
 references:
 
 
 
   ## Cache
 
-
-
   cache_key: &cache_key
-
     key: cache-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}
-
   restore_cache: &restore_cache
-
     restore_cache:
-
       <<: *cache_key
-
   save_cache: &save_cache
-
     save_cache:
-
       <<: *cache_key
-
       paths:
-
         - ~/.gradle
-
         - ~/.m2
-
-
-
   ## Workspace
 
-
-
   workspace: &workspace
-
                ~/workspace
-
   attach_debug_workspace: &attach_debug_workspace
-
     attach_workspace:
-
       at: *workspace
-
   attach_release_workspace: &attach_release_workspace
-
     attach_workspace:
-
       at: *workspace
-
   persist_debug_workspace: &persist_debug_workspace
-
     persist_to_workspace:
-
       root: *workspace
-
       paths:
-
         - app/build/outputs/androidTest-results
-
         - app/build/outputs/apk
-
         - app/build/outputs/code-coverage
-
         - app/build/test-results
-
   persist_release_workspace: &persist_release_workspace
-
     persist_to_workspace:
-
       root: *workspace
-
       paths:
-
         - app/build
-
   attach_firebase_workspace: &attach_firebase_workspace
-
     attach_workspace:
-
       at: *workspace
-
   persist_firebase_workspace: &persist_firebase_workspace
-
     persist_to_workspace:
-
       root: *workspace
-
       paths:
-
         - firebase
-
 
 
   ## Docker image configuration
@@ -101,12 +54,10 @@ references:
 
 
   android_config: &android_config
-
     working_directory: *workspace
-
     docker:
 
-      - image: circleci/android:api-27-alpha
+      - image: circleci/android:api-29-alpha
 
     environment:
 
